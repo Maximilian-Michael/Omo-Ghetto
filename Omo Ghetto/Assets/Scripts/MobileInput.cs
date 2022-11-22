@@ -66,7 +66,7 @@ public class MobileInput : MonoBehaviour
                 swipeDelta = Input.touches[0].position - startTouch;
             }
             //Checking for standalone
-            else if (Input.GetMouseButtonDown(0))
+            else if (Input.GetMouseButton(0))
             {
                 swipeDelta = (Vector2)Input.mousePosition - startTouch;
             }
