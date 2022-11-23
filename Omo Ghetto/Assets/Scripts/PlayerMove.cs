@@ -62,6 +62,12 @@ public class PlayerMove : MonoBehaviour
                 anim.SetTrigger("Jump");
                 verticalVelocity = jumpForce;
             }
+            else if (MobileInput.Instance.SwipeDown)
+            {
+                //Slide
+                StartSliding();
+                Invoke("StopSliding", 1.0f);
+            }
         }
         else
         {
@@ -89,6 +95,20 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    private void StartSliding()
+    {
+        anim.SetBool("Slide", true);
+        controller.height /= 2;
+        controller.center = new Vector3(controller.center.x, controller.center.y / 2, controller.center.z);
+    }
+
+    private void StopSliding()
+    {
+        anim.SetBool("Slide", false);
+        controller.height *= 2;
+        controller.center = new Vector3(controller.center.x, controller.center.y * 2, controller.center.z);
+    }
+
     private void MoveLane(bool goingRight)
     {
         desiredLane += (goingRight) ? 1 : -1;
@@ -106,5 +126,22 @@ public class PlayerMove : MonoBehaviour
     public void StartGame()
     {
         isRunning = true;
+        anim.SetTrigger("StartRunning");
+    }
+
+    private void Crash()
+    {
+        anim.SetTrigger("Death");
+        isRunning = false;
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        switch (hit.gameObject.tag)
+        {
+            case "Obstacle":
+                Crash();
+            break;
+        }
     }
 }
